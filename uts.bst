@@ -73,6 +73,7 @@ ENTRY
     series
     title
     type
+    urldate
     url
     volume
     year
@@ -346,7 +347,7 @@ MACRO {ieeese} {"IEEE Transactions on Software Engineering"}
 MACRO {ieeetc} {"IEEE Transactions on Computers"}
 
 MACRO {ieeetcad}
- {"IEEE Transactions on Computer-Aided Design of Integrated Circuits"}
+{"IEEE Transactions on Computer-Aided Design of Integrated Circuits"}
 
 MACRO {ipl} {"Information Processing Letters"}
 
@@ -407,6 +408,7 @@ FUNCTION {bibinfo.warn}
     }
   if$
 }
+
 FUNCTION {format.url}
 {
   url
@@ -416,8 +418,16 @@ FUNCTION {format.url}
   if$
 }
 
-INTEGERS { nameptr namesleft numnames }
+FUNCTION {format.urldate}
+{ 
+  urldate 
+  duplicate$ empty$
+    { pop$ "" }
+    { "viewed \DTMdate{" swap$ * "}" * }
+  if$
+}
 
+INTEGERS { nameptr namesleft numnames }
 
 STRINGS  { bibinfo}
 
@@ -1037,6 +1047,7 @@ FUNCTION {article}
     { format.journal.pages }
     { format.journal.eid }
   if$
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1068,6 +1079,7 @@ FUNCTION {book}
       format.book.crossref output.nonnull
     }
   if$
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1082,6 +1094,7 @@ FUNCTION {booklet}
   end.quote.title
   howpublished "howpublished" bibinfo.check output
   address "address" bibinfo.check output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1117,6 +1130,7 @@ FUNCTION {inbook}
     }
   if$
   format.pages "pages" output.check
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1143,6 +1157,7 @@ FUNCTION {incollection}
     }
   if$
   format.pages "pages" output.check
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1170,6 +1185,7 @@ FUNCTION {inproceedings}
     }
   if$
   format.pages "pages" output.check
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1185,6 +1201,7 @@ FUNCTION {manual}
   organization "organization" bibinfo.check output
   address "address" bibinfo.check output
   format.edition output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1201,6 +1218,7 @@ FUNCTION {mastersthesis}
   bbl.mthesis format.thesis.type output.nonnull
   school "school" bibinfo.warn output
   address "address" bibinfo.check output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1215,6 +1233,7 @@ FUNCTION {misc}
   format.title output
   end.quote.title
   howpublished "howpublished" bibinfo.check output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1230,6 +1249,7 @@ FUNCTION {phdthesis}
   bbl.phdthesis format.thesis.type output.nonnull
   school "school" bibinfo.warn output
   address "address" bibinfo.check output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1250,6 +1270,7 @@ FUNCTION {proceedings}
       format.publisher.address output
     }
   if$
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1267,6 +1288,7 @@ FUNCTION {techreport}
   format.tr.number output.nonnull
   institution "institution" bibinfo.warn output
   address "address" bibinfo.check output
+  format.urldate output
   format.url output
   format.note output
   fin.entry
@@ -1280,6 +1302,7 @@ FUNCTION {unpublished}
   date.block
   format.title "title" output.check
   end.quote.title
+  format.urldate output
   format.url output
   format.note "note" output.check
   fin.entry
@@ -1575,9 +1598,9 @@ FUNCTION {begin.bib}
   write$ newline$
   "\providecommand{\url}[1]{\texttt{#1}}"
   write$ newline$
-  "\providecommand{\urlprefix}{< }"
+  "\providecommand{\urlprefix}{\textless}"
   write$ newline$
-  "\providecommand{\urlsuffix}{> }"
+  "\providecommand{\urlsuffix}{\textgreater}"
   write$ newline$
 }
 EXECUTE {begin.bib}
